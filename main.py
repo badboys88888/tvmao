@@ -1,42 +1,34 @@
-import json
-import time
 from config import CHANNELS, YEAR, OUTPUT_FILE
-from fetch import fetch
+from fetch import fetch_api
 from parse import parse
 from builder import build
+import json
+import time
 
 def main():
+
     all_epg = {}
 
-    for name, url in CHANNELS.items():
-        print("\n========================")
-        print("fetch:", name)
-        print(url)
+    for name, channel_id in CHANNELS.items():
 
-        html = fetch(url)
+        print("\nfetch:", name, channel_id)
 
-        # 🔥 DEBUG：确认是否抓到真实页面
-        print("----- HTML PREVIEW -----")
-        print(html[:500])
-        print("------------------------")
+        data = fetch_api(channel_id)
 
-        items = parse(html)
+        items = parse(data)
 
-        print("parsed items:", len(items))
-        print(items[:3])
+        print("items:", len(items))
 
         epg = build(items, YEAR)
 
-        print("epg items:", len(epg))
-
         all_epg[name] = epg
 
-        time.sleep(2)
+        time.sleep(1)
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(all_epg, f, ensure_ascii=False, indent=2)
 
-    print("\ndone ->", OUTPUT_FILE)
+    print("done ->", OUTPUT_FILE)
 
 
 if __name__ == "__main__":
