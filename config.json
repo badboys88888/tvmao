@@ -1,16 +1,16 @@
 {
     "channels": {
-        "DOX剧场": ["/program_digital/DOXJC-w", "DOX剧场"],
-		"DOX怡家": ["/program_digital/DOXYJ-w", "DOX怡家"],
-		"DOX新知": ["/program_digital/DOXXZ-w", "DOX新知"],
-		"DOX新艺": ["/program_digital/DOXXY-w", "DOX新艺"],
-		"DOX映画": ["/program_digital/DOXYH-w", "DOX映画"],
-		"DOX英伦": ["/program_digital/DOXYL-w", "DOX英伦"],
-		"DOX院线": ["/program_digital/DOX-CINEMA-w", "DOX院线"],
-		"华数-HD探索纪录": ["/program/HSCM-TSJS-w", "HD探索纪录"],
-		"华数-HD欧美影院": ["/program/HSCM-OMYY-w", "HD欧美影院"],
-		"华数-HD精品剧场": ["/program/HSCM-HSJPJC-w", "HD精品剧场"],
-		"华数-HD少儿动漫": ["/program/HSCM-HSSEDM-w", "HD少儿动漫"],
-		"华数-动感英超": ["/program/HSCM-HSDGYC-w", "动感英超"]
+        "DOX剧场": ["/program_digital/DOXJC-w", "DOXJC"],
+		"DOX怡家": ["/program_digital/DOXYJ-w", "DOXYJ"],
+		"DOX新知": ["/program_digital/DOXXZ-w", "DOXXZ"],
+		"DOX新艺": ["/program_digital/DOXXY-w", "DOXXY"],
+		"DOX映画": ["/program_digital/DOXYH-w", "DOXYH"],
+		"DOX英伦": ["/program_digital/DOXYL-w", "DOXYL"],
+		"DOX院线": ["/program_digital/DOX-CINEMA-w", "DOX-CINEMA"],
+		"华数-HD探索纪录": ["/program/HSCM-TSJS-w", "TSJS"],
+		"华数-HD欧美影院": ["/program/HSCM-OMYY-w", "OMYY"],
+		"华数-HD精品剧场": ["/program/HSCM-HSJPJC-w", "HSJPJC"],
+		"华数-HD少儿动漫": ["/program/HSCM-HSSEDM-w", "HSSEDM"],
+		"华数-动感英超": ["/program/HSCM-HSDGYC-w", "HSDGYC"]
     }
 }
