@@ -12,7 +12,7 @@ def build(items, year):
         )
 
         if i + 1 < len(items):
-            nxt = items[i+1]
+            nxt = items[i + 1]
 
             end = datetime.strptime(
                 f"{year}-{nxt['date']} {nxt['time']}",
