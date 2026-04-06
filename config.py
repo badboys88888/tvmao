@@ -1,7 +1,7 @@
 CHANNELS = {
-    "LUZHOUTV": "https://www.tvmao.com/program/LUZHOUTV-KUZHOUTV1-w1.html",
-    "SCYBTV1": "https://www.tvmao.com/program/SCYBTV1-w1.html",
-    "SCZGTV1": "https://www.tvmao.com/program/SCZGTV1-w1.html"
+    "LUZHOUTV": "LUZHOUTV-KUZHOUTV1",
+    "SCYBTV1": "SCYBTV1",
+    "SCZGTV1": "SCZGTV1"
 }
 
 YEAR = 2026
