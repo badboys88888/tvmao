@@ -6,26 +6,37 @@ from parse import parse
 from builder import build
 
 def main():
-
     all_epg = {}
 
     for name, url in CHANNELS.items():
+        print("\n========================")
         print("fetch:", name)
+        print(url)
 
         html = fetch(url)
 
+        # 🔥 DEBUG：确认是否抓到真实页面
+        print("----- HTML PREVIEW -----")
+        print(html[:500])
+        print("------------------------")
+
         items = parse(html)
+
+        print("parsed items:", len(items))
+        print(items[:3])
 
         epg = build(items, YEAR)
 
+        print("epg items:", len(epg))
+
         all_epg[name] = epg
 
-        time.sleep(2)  # 防封
+        time.sleep(2)
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(all_epg, f, ensure_ascii=False, indent=2)
 
-    print("done ->", OUTPUT_FILE)
+    print("\ndone ->", OUTPUT_FILE)
 
 
 if __name__ == "__main__":
