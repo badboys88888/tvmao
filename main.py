@@ -2,7 +2,7 @@ import json
 import time
 from config import CHANNELS, YEAR, OUTPUT_FILE
 from fetch import fetch
-from parser import parse
+from parse import parse
 from builder import build
 
 def main():
