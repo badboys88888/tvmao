@@ -42,7 +42,6 @@ CCTV卫生健康,卫生健康,CCTV-卫生健康,CCTV卫生与健康
 央广购物
 聚鲨环球精选
 环球奇观
-中国交通,中国交通频道
 CHC家庭影院
 CHC影迷电影
 CHC动作电影
@@ -52,6 +51,7 @@ CHC动作电影
 中央新影-中学生,中学生,CCTV中学生,CCTV-中学生,cctv中学生,cctv-中学生
 中央新影-老故事,老故事,CCTV老故事,CCTV-老故事,cctv老故事,cctv-老故事
 中央新影-发现之旅,发现之旅,CCTV发现之旅,CCTV-发现之旅,cctv发现之旅,cctv-发现之旅
+中国交通,中国交通频道
 CETV1,CETV-1,教育一套,中国教育一套,中国教育1套,中国教育1,中国教育电视台-1,CETV-1高清,中国教育1台
 CETV2,CETV-2,教育二套,中国教育二套,中国教育2套,中国教育2,中国教育电视台-2,中国教育2台
 CETV3,CETV-3,教育三套,中国教育三套,中国教育3套,中国教育3,中国教育电视台-3,中国教育3台
@@ -103,7 +103,7 @@ CETV早期教育,早期教育,CCTV早期教育
 陕西卫视,陕西卫视高清
 四川卫视
 深圳卫视
-三沙卫视
+三沙卫视,三沙衛視
 天津卫视
 西藏卫视,西藏卫视高清
 新疆卫视,新疆卫视高清
@@ -3377,20 +3377,21 @@ now财经台
 八大娱乐台
 八大优频道
 八大综艺台,八大綜藝台
-三立台湾
-三立新闻
-三立都会
-三立iNEWS,三立新聞iNEWS
-三立戏剧台,三立戲劇台,三立戲劇,三立戏剧,三立戏剧台
-三立综合台,三立綜合台
-东森美洲
-东森新闻,東森新聞台
-东森电影
-东森戏剧
-东森洋片
-东森综合
-东森财经新闻,東森財經新聞台,東森財經新聞
-东森Yoyo
+三立台湾台,三立台湾,三立台灣台
+三立新闻台,三立新聞台,三立新闻
+三立都会台,三立都會台,三立都会
+三立iNEWS,三立新聞iNEWS,三立財經新聞台,三立财经新闻台
+三立戏剧台,三立戲劇台,三立戲劇,三立戏剧,三立戏剧台,三立戲劇台HD,三立戏剧台HD
+三立综合台,三立綜合台,三立綜合台HD,三立综合台HD
+东风卫视,東風衛視
+东森美洲台,东森美洲
+东森新闻台,东森新闻,東森新聞台
+东森电影台,东森电影
+东森戏剧台,东森戏剧
+东森洋片台,东森洋片
+东森综合台,东森综合
+东森财经新闻台,东森财经新闻,東森財經新聞台,東森財經新聞
+东森幼幼台,东森Yoyo
 东森超视
 东森亚洲卫视
 东森亚洲新闻
@@ -3400,6 +3401,7 @@ ETToday综合台
 中天娱乐台,中天娛樂台,中天娛樂,中天娱乐台,中天娛樂臺,中天娱乐
 中天综合
 中天亚洲,中天亞洲台
+中台湾生活网频道,中台灣生活網頻道
 台视
 台视财经,台視財經台
 台视综合
@@ -3562,3 +3564,52 @@ DOX院线
 华数-HD少儿动漫,HD少儿动漫
 华数-动感英超,动感英超
 功夫台,功夫
+靖天国际台,KLT靖天國際台,KLT-靖天国际台,KLT靖天國際台,KLT-靖天国际台
+JET综合台,JET綜合台
+JStar极限台,JSTAR極限台電影頻道,JStar极限台电影频道
+K頻道,K 频道
+KBS World,KBSWORLD(HD),KBS World (HD),KBSWORLD
+K-Plus,KPLUSHD,K-Plus HD
+LOVE NATURE 4K,LOVENATURE4K
+Now Sports 4K 1,NOWSPORTS4K1
+Now Sports 4K 2,NOWSPORTS4K2
+Now Sports 4K 3,NOWSPORTS4K3
+Now Sports 4K 4,NOWSPORTS4K4
+Now Golf 1,NOWGOLF1
+Now Golf 2,NOWGOLF2
+Now Golf 3,NOWGOLF3
+Now Sports 1,NOWSPORTS1
+Now Sports 2,NOWSPORTS2
+Now Sports 3,NOWSPORTS3
+Now Sports 4,NOWSPORTS4
+Now Sports 5,NOWSPORTS5
+Now Sports 6,NOWSPORTS6
+Now Sports 618,NOWSPORTS618
+Now Sports 641,NOWSPORTS641
+Now Sports 647,NOWSPORTS647
+Now Sports 651,NOWSPORTS651
+Now Sports 652,NOWSPORTS652
+Now Sports 7,NOWSPORTS7
+Now Sports Plus,NOWSPORTSPLUS
+Now Sports Premier League TV,NOWSPORTSPREMIERLEAGUETV
+Now Sports 精选,NOWSPORTS精選
+Now Sports 英超1台,NOWSPORTS英超1台
+Now Sports 英超2台,NOWSPORTS英超2台
+Now Sports 英超3台,NOWSPORTS英超3台
+Now Sports 英超4台,NOWSPORTS英超4台
+Now Sports 英超5台,NOWSPORTS英超5台
+Now Sports 英超6台,NOWSPORTS英超6台
+Now Sports 英超7台,NOWSPORTS英超7台
+Now 影视点播站,NOW影視點播站
+Now 爆谷台,NOW爆谷台
+NOW668
+NowJelli,NOWJELLI
+Now报价台,NOW報價台
+Now新闻台,NOW新聞台
+Now爆谷星影台,NOW爆谷星影台
+Now直播台,NOW直播台
+Now华剧台,NOW華劇台
+Now财经台,NOW財經台
+
+
+
