@@ -567,6 +567,7 @@ if __name__ == "__main__":
         'https://raw.githubusercontent.com/zzq12345/epgtest/main/epgtvsou.xml',
         'https://epg.136605.xyz/9days.xml',
         'https://raw.githubusercontent.com/peterHchina/iptv/main/EPG.xml',
+        'https://raw.githubusercontent.com/badboys88888/tvmao/refs/heads/main/tvmao.xml',
 
     ]
     
