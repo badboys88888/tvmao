@@ -21,41 +21,34 @@ channels = config["channels"]
 # 请求头
 # =========================
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-    "Accept": "application/json,text/plain,*/*",
+    "User-Agent": "Mozilla/5.0",
     "Referer": "https://www.tvmao.com/"
 }
 
 # =========================
-# 统一解析 channel（关键修复）
+# channel解析（兼容4字段）
 # =========================
 def parse_channel(info):
-    """
-    兼容：
-    1. list: [path, id]
-    2. list: [path, id, xxx...]
-    3. dict: {"path":..., "id":..., "icon":..., "region":...}
-    """
 
     if isinstance(info, dict):
         return {
             "path": info.get("path", ""),
             "id": info.get("id", ""),
-            "icon": info.get("icon", ""),
             "region": info.get("region", "CN"),
-            "source": info.get("source", "tvmao")
+            "source": info.get("source", "tvmao"),
+            "icon": info.get("icon", "")
         }
 
     return {
         "path": info[0] if len(info) > 0 else "",
         "id": info[1] if len(info) > 1 else "",
-        "icon": "",
-        "region": "CN",
-        "source": "tvmao"
+        "region": info[2] if len(info) > 2 else "CN",
+        "source": info[3] if len(info) > 3 else "tvmao",
+        "icon": ""
     }
 
 # =========================
-# JSON解析
+# 安全JSON
 # =========================
 def safe_json(res):
     try:
@@ -64,22 +57,21 @@ def safe_json(res):
         return None
 
 # =========================
-# 提取节目
+# 提取节目（🔥防炸核心）
 # =========================
 def extract_programs(data):
+
     if not data:
         return []
 
     if isinstance(data, dict):
-        if "pro" in data:
-            return data["pro"]
-        if "data" in data and isinstance(data["data"], list):
-            return data["data"]
-        if "result" in data and isinstance(data["result"], list):
-            return data["result"]
+        pro = data.get("pro") or data.get("data") or data.get("result")
+
+        if isinstance(pro, list):
+            return [p for p in pro if isinstance(p, dict)]
 
     if isinstance(data, list):
-        return data
+        return [p for p in data if isinstance(p, dict)]
 
     return []
 
@@ -87,6 +79,7 @@ def extract_programs(data):
 # 时间解析
 # =========================
 def parse_time(dt, t):
+
     try:
         t = str(t).strip()
 
@@ -111,17 +104,17 @@ def parse_time(dt, t):
 # =========================
 # 获取EPG
 # =========================
-def get_epg(channel_name, channel_id, dt):
+def get_epg(name, channel_id, dt):
 
-    need_weekday = dt.weekday() + 1
+    weekday = dt.weekday() + 1
 
     url = (
         f"https://lighttv.tvmao.com/qa/qachannelschedule"
         f"?epgCode={channel_id}&op=getProgramByChnid"
-        f"&epgName=&isNew=on&day={need_weekday}"
+        f"&isNew=on&day={weekday}"
     )
 
-    print(f"\n[FETCH] {channel_name} | {channel_id} | {dt}")
+    print(f"\n[FETCH] {name} | {channel_id} | {dt}")
 
     try:
         res = requests.get(url, headers=headers, timeout=10)
@@ -139,8 +132,16 @@ def get_epg(channel_name, channel_id, dt):
 
         for i, p in enumerate(programs):
 
+            # 🔥 核心防炸
+            if not isinstance(p, dict):
+                print("[SKIP]", p)
+                continue
+
             title = p.get("name") or p.get("title") or "未知节目"
             t = p.get("time")
+
+            if not t:
+                continue
 
             start = parse_time(dt, t)
             if not start:
@@ -167,7 +168,7 @@ def get_epg(channel_name, channel_id, dt):
         return []
 
 # =========================
-# 写XML（完整增强版）
+# 写XML
 # =========================
 def save_xml(all_epgs):
 
@@ -177,30 +178,22 @@ def save_xml(all_epgs):
 
         f.write('<?xml version="1.0" encoding="UTF-8"?><tv>\n')
 
-        # =========================
-        # CHANNELS
-        # =========================
+        # CHANNEL
         for name, info in channels.items():
 
             meta = parse_channel(info)
 
-            region = meta["region"]
-            source = meta["source"]
-            icon = meta["icon"]
-
             f.write(
-                f'<channel id="{meta["id"]}" region="{region}" source="{source}">'
+                f'<channel id="{meta["id"]}" region="{meta["region"]}" source="{meta["source"]}">'
                 f'<display-name>{name}</display-name>'
             )
 
-            if icon:
-                f.write(f'<icon src="{icon}" />')
+            if meta["icon"]:
+                f.write(f'<icon src="{meta["icon"]}" />')
 
             f.write('</channel>\n')
 
-        # =========================
-        # PROGRAMMES
-        # =========================
+        # PROGRAM
         for e in all_epgs:
 
             start = e["starttime"].astimezone(tz_sh).strftime("%Y%m%d%H%M%S") + " +0800"
@@ -217,7 +210,6 @@ def save_xml(all_epgs):
                 f'<programme channel="{e["channel_id"]}" start="{start}" stop="{end}">'
                 f'<title lang="zh">{title}</title>'
                 f'<category system="region">CN</category>'
-                f'<category system="type">IPTV</category>'
                 f'</programme>\n'
             )
 
@@ -232,13 +224,14 @@ def save_xml(all_epgs):
     print("GZ生成完成: tvmao.xml.gz")
 
 # =========================
-# 主函数
+# 主流程
 # =========================
 def main():
 
     all_epgs = []
 
     today = datetime.datetime.now().date()
+
     days = [
         today,
         today + datetime.timedelta(days=1),
@@ -246,6 +239,7 @@ def main():
     ]
 
     for dt in days:
+
         print(f"\n===== 日期 {dt} =====")
 
         for name, info in channels.items():
