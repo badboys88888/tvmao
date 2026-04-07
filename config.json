@@ -1,19 +1,19 @@
 {
     "channels": {
-        "DOX剧场": ["/program_digital/DOXJC-w", "DOXJC"],
-		"DOX怡家": ["/program_digital/DOXYJ-w", "DOXYJ"],
-		"DOX新知": ["/program_digital/DOXXZ-w", "DOXXZ"],
-		"DOX新艺": ["/program_digital/DOXXY-w", "DOXXY"],
-		"DOX映画": ["/program_digital/DOXYH-w", "DOXYH"],
-		"DOX英伦": ["/program_digital/DOXYL-w", "DOXYL"],
-		"DOX院线": ["/program_digital/DOX-CINEMA-w", "DOX-CINEMA"],
-		"华数-HD探索纪录": ["/program/HSCM-TSJS-w", "TSJS"],
-		"华数-HD欧美影院": ["/program/HSCM-OMYY-w", "OMYY"],
-		"华数-HD精品剧场": ["/program/HSCM-HSJPJC-w", "HSJPJC"],
-		"华数-HD少儿动漫": ["/program/HSCM-HSSEDM-w", "HSSEDM"],
-		"华数-动感英超": ["/program/HSCM-HSDGYC-w", "HSDGYC"],
-		"资阳新闻综合频道": ["/program/ZIYANGTV-SUIYTV-w", "SUIYTV"],
-		"自贡综合": ["/program/SCZGTV-SCZGTV1-w", "SCZGTV1"],
-		"自贡文化生活": ["/program/SCZGTV-SCZGTV2-w", "SCZGTV2"]		
+        "DOX剧场": ["/program_digital/DOXJC-w", "DOXJC","CN","tvmao"],
+		"DOX怡家": ["/program_digital/DOXYJ-w", "DOXYJ","CN","tvmao"],
+		"DOX新知": ["/program_digital/DOXXZ-w", "DOXXZ","CN","tvmao"],
+		"DOX新艺": ["/program_digital/DOXXY-w", "DOXXY","CN","tvmao"],
+		"DOX映画": ["/program_digital/DOXYH-w", "DOXYH","CN","tvmao"],
+		"DOX英伦": ["/program_digital/DOXYL-w", "DOXYL","CN","tvmao"],
+		"DOX院线": ["/program_digital/DOX-CINEMA-w", "DOX-CINEMA","CN","tvmao"],
+		"华数-HD探索纪录": ["/program/HSCM-TSJS-w", "TSJS","CN","tvmao"],
+		"华数-HD欧美影院": ["/program/HSCM-OMYY-w", "OMYY","CN","tvmao"],
+		"华数-HD精品剧场": ["/program/HSCM-HSJPJC-w", "HSJPJC","CN","tvmao"],
+		"华数-HD少儿动漫": ["/program/HSCM-HSSEDM-w", "HSSEDM","CN","tvmao"],
+		"华数-动感英超": ["/program/HSCM-HSDGYC-w", "HSDGYC","CN","tvmao"],
+		"资阳新闻综合频道": ["/program/ZIYANGTV-SUIYTV-w", "SUIYTV","CN","tvmao"],
+		"自贡综合": ["/program/SCZGTV-SCZGTV1-w", "SCZGTV1","CN","tvmao"],
+		"自贡文化生活": ["/program/SCZGTV-SCZGTV2-w", "SCZGTV2","CN","tvmao"]	
     }
 }
