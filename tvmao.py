@@ -21,74 +21,67 @@ channels = config["channels"]
 # 请求头
 # =========================
 headers = {
-    "User-Agent": "Mozilla/5.0",
-    "Referer": "https://www.tvmao.com/"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+    "Accept": "application/json,text/plain,*/*",
 }
 
 # =========================
-# channel解析（兼容4字段）
-# =========================
-def parse_channel(info):
-
-    if isinstance(info, dict):
-        return {
-            "path": info.get("path", ""),
-            "id": info.get("id", ""),
-            "region": info.get("region", "CN"),
-            "source": info.get("source", "tvmao"),
-            "icon": info.get("icon", "")
-        }
-
-    return {
-        "path": info[0] if len(info) > 0 else "",
-        "id": info[1] if len(info) > 1 else "",
-        "region": info[2] if len(info) > 2 else "CN",
-        "source": info[3] if len(info) > 3 else "tvmao",
-        "icon": ""
-    }
-
-# =========================
-# 安全JSON
+# JSON安全解析
 # =========================
 def safe_json(res):
     try:
         return res.json()
-    except:
+    except Exception:
         return None
 
 # =========================
-# 提取节目（🔥防炸核心）
+# 提取节目数据（核心修复）
 # =========================
 def extract_programs(data):
-
     if not data:
         return []
 
+    # dict结构
     if isinstance(data, dict):
-        pro = data.get("pro") or data.get("data") or data.get("result")
+        if "pro" in data:
+            return data["pro"]
+        if "data" in data and isinstance(data["data"], list):
+            return data["data"]
+        if "result" in data and isinstance(data["result"], list):
+            return data["result"]
 
-        if isinstance(pro, list):
-            return [p for p in pro if isinstance(p, dict)]
-
+    # list结构
     if isinstance(data, list):
-        return [p for p in data if isinstance(p, dict)]
+        for item in data:
+            if isinstance(item, dict):
+                if "pro" in item:
+                    return item["pro"]
+                if "data" in item:
+                    return item["data"]
 
     return []
 
 # =========================
-# 时间解析
+# 时间解析（容错）
 # =========================
 def parse_time(dt, t):
-
+    """
+    支持：
+    1830
+    18:30
+    2026-04-06 18:30
+    """
     try:
         t = str(t).strip()
 
+        # 1830
         if re.fullmatch(r"\d{4}", t):
             return datetime.datetime.combine(
                 dt,
                 datetime.time(int(t[:2]), int(t[2:]))
             )
 
+        # 18:30
         if ":" in t and len(t) <= 5:
             h, m = t.split(":")
             return datetime.datetime.combine(
@@ -96,6 +89,7 @@ def parse_time(dt, t):
                 datetime.time(int(h), int(m))
             )
 
+        # fallback datetime
         return datetime.datetime.strptime(t, "%Y-%m-%d %H:%M")
 
     except:
@@ -104,17 +98,17 @@ def parse_time(dt, t):
 # =========================
 # 获取EPG
 # =========================
-def get_epg(name, channel_id, dt):
+def get_epg(channel_name, channel_id, dt):
 
-    weekday = dt.weekday() + 1
+    need_weekday = dt.weekday() + 1
 
     url = (
         f"https://lighttv.tvmao.com/qa/qachannelschedule"
         f"?epgCode={channel_id}&op=getProgramByChnid"
-        f"&isNew=on&day={weekday}"
+        f"&epgName=&isNew=on&day={need_weekday}"
     )
 
-    print(f"\n[FETCH] {name} | {channel_id} | {dt}")
+    print(f"\n[FETCH] {channel_name} | {channel_id} | {dt}")
 
     try:
         res = requests.get(url, headers=headers, timeout=10)
@@ -123,32 +117,31 @@ def get_epg(name, channel_id, dt):
         programs = extract_programs(data)
 
         if not programs:
-            print("[EMPTY] no data")
-            return []
-
-        programs.sort(key=lambda x: x.get("time", ""))
+            return {
+                "success": 0,
+                "epgs": [],
+                "msg": "no data",
+                "source": "tvmao"
+            }
 
         epgs = []
 
-        for i, p in enumerate(programs):
+        # 排序（防乱序）
+        programs.sort(key=lambda x: x.get("time", ""))
 
-            # 🔥 核心防炸
-            if not isinstance(p, dict):
-                print("[SKIP]", p)
-                continue
+        for i, p in enumerate(programs):
 
             title = p.get("name") or p.get("title") or "未知节目"
             t = p.get("time")
-
-            if not t:
-                continue
 
             start = parse_time(dt, t)
             if not start:
                 continue
 
+            # 估算结束时间
             if i < len(programs) - 1:
-                end = parse_time(dt, programs[i + 1].get("time"))
+                next_t = programs[i + 1].get("time")
+                end = parse_time(dt, next_t)
                 if not end:
                     end = start + datetime.timedelta(minutes=30)
             else:
@@ -156,16 +149,26 @@ def get_epg(name, channel_id, dt):
 
             epgs.append({
                 "channel_id": channel_id,
-                "title": title,
                 "starttime": start,
-                "endtime": end
+                "endtime": end,
+                "title": title,
+                "desc": "",
             })
 
-        return epgs
+        return {
+            "success": 1,
+            "epgs": epgs,
+            "msg": "",
+            "source": "tvmao"
+        }
 
     except Exception as e:
-        print("[ERROR]", e)
-        return []
+        return {
+            "success": 0,
+            "epgs": [],
+            "msg": str(e),
+            "source": "tvmao"
+        }
 
 # =========================
 # 写XML
@@ -178,22 +181,12 @@ def save_xml(all_epgs):
 
         f.write('<?xml version="1.0" encoding="UTF-8"?><tv>\n')
 
-        # CHANNEL
+        # channels
         for name, info in channels.items():
+            channel_id = info[1]
+            f.write(f'<channel id="{channel_id}"><display-name>{name}</display-name></channel>\n')
 
-            meta = parse_channel(info)
-
-            f.write(
-                f'<channel id="{meta["id"]}" region="{meta["region"]}" source="{meta["source"]}">'
-                f'<display-name>{name}</display-name>'
-            )
-
-            if meta["icon"]:
-                f.write(f'<icon src="{meta["icon"]}" />')
-
-            f.write('</channel>\n')
-
-        # PROGRAM
+        # programmes
         for e in all_epgs:
 
             start = e["starttime"].astimezone(tz_sh).strftime("%Y%m%d%H%M%S") + " +0800"
@@ -208,15 +201,14 @@ def save_xml(all_epgs):
 
             f.write(
                 f'<programme channel="{e["channel_id"]}" start="{start}" stop="{end}">'
-                f'<title lang="zh">{title}</title>'
-                f'<category system="region">CN</category>'
-                f'</programme>\n'
+                f'<title lang="zh">{title}</title></programme>\n'
             )
 
         f.write("</tv>")
 
     print("\nXML生成完成: tvmao.xml")
 
+    # gzip
     with open("tvmao.xml", "rb") as f_in:
         with gzip.open("tvmao.xml.gz", "wb") as f_out:
             f_out.writelines(f_in)
@@ -224,40 +216,32 @@ def save_xml(all_epgs):
     print("GZ生成完成: tvmao.xml.gz")
 
 # =========================
-# 主流程
+# 主函数
 # =========================
 def main():
 
     all_epgs = []
 
     today = datetime.datetime.now().date()
-
-    days = [
-        today,
-        today + datetime.timedelta(days=1),
-        today + datetime.timedelta(days=2)
-    ]
+    days = [today, today + datetime.timedelta(days=1), today + datetime.timedelta(days=2)]
 
     for dt in days:
-
         print(f"\n===== 日期 {dt} =====")
 
         for name, info in channels.items():
+            url_part, channel_id = info
 
-            meta = parse_channel(info)
+            ret = get_epg(name, channel_id, dt)
 
-            epgs = get_epg(name, meta["id"], dt)
-
-            if epgs:
-                all_epgs.extend(epgs)
-                print(f"[OK] {name} ({len(epgs)})")
+            if ret["success"]:
+                all_epgs.extend(ret["epgs"])
             else:
-                print(f"[FAIL] {name}")
+                print(f"[FAIL] {name}: {ret['msg']}")
 
-            time.sleep(0.3)
+            time.sleep(0.2)
 
     save_xml(all_epgs)
 
 
 if __name__ == "__main__":
-    main()
+    main()你用这个把标签弄进去就行了
