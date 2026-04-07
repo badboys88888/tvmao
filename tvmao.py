@@ -27,7 +27,35 @@ headers = {
 }
 
 # =========================
-# JSON安全解析
+# 统一解析 channel（关键修复）
+# =========================
+def parse_channel(info):
+    """
+    兼容：
+    1. list: [path, id]
+    2. list: [path, id, xxx...]
+    3. dict: {"path":..., "id":..., "icon":..., "region":...}
+    """
+
+    if isinstance(info, dict):
+        return {
+            "path": info.get("path", ""),
+            "id": info.get("id", ""),
+            "icon": info.get("icon", ""),
+            "region": info.get("region", "CN"),
+            "source": info.get("source", "tvmao")
+        }
+
+    return {
+        "path": info[0] if len(info) > 0 else "",
+        "id": info[1] if len(info) > 1 else "",
+        "icon": "",
+        "region": "CN",
+        "source": "tvmao"
+    }
+
+# =========================
+# JSON解析
 # =========================
 def safe_json(res):
     try:
@@ -139,7 +167,7 @@ def get_epg(channel_name, channel_id, dt):
         return []
 
 # =========================
-# 写XML（完整版增强）
+# 写XML（完整增强版）
 # =========================
 def save_xml(all_epgs):
 
@@ -150,27 +178,18 @@ def save_xml(all_epgs):
         f.write('<?xml version="1.0" encoding="UTF-8"?><tv>\n')
 
         # =========================
-        # CHANNELS（增强字段）
+        # CHANNELS
         # =========================
         for name, info in channels.items():
 
-            url_part, channel_id = info
+            meta = parse_channel(info)
 
-            # 默认规则（你以后可以扩展）
-            if "香港" in name or "HK" in name:
-                region = "HK"
-            elif "台湾" in name or "TW" in name:
-                region = "TW"
-            else:
-                region = "CN"
-
-            source = "tvmao"
-
-            # icon（以后可以映射）
-            icon = ""
+            region = meta["region"]
+            source = meta["source"]
+            icon = meta["icon"]
 
             f.write(
-                f'<channel id="{channel_id}" region="{region}" source="{source}">'
+                f'<channel id="{meta["id"]}" region="{region}" source="{source}">'
                 f'<display-name>{name}</display-name>'
             )
 
@@ -180,7 +199,7 @@ def save_xml(all_epgs):
             f.write('</channel>\n')
 
         # =========================
-        # PROGRAMMES（增强分类）
+        # PROGRAMMES
         # =========================
         for e in all_epgs:
 
@@ -231,9 +250,9 @@ def main():
 
         for name, info in channels.items():
 
-            url_part, channel_id = info
+            meta = parse_channel(info)
 
-            epgs = get_epg(name, channel_id, dt)
+            epgs = get_epg(name, meta["id"], dt)
 
             if epgs:
                 all_epgs.extend(epgs)
