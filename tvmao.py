@@ -244,4 +244,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()你用这个把标签弄进去就行了
+    main()
